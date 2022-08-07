@@ -1,15 +1,35 @@
-import React, { useEffect, useRef } from 'react';
-import { clearCanvas, setCanvasSize } from './utils/canvasUtils';
+import React, { useEffect, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { clearCanvas, drawStroke, setCanvasSize } from "./utils/canvasUtils";
+import { beginStroke, endStroke, updateStroke } from "./actions";
+import { currentStrokeSelector } from "./rootReducer";
 
 const WIDTH = 1024;
 const HEIGHT = 768;
 
 function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const currentStroke = useSelector(currentStrokeSelector);
 
   const getCanvasWithContext = (canvas = canvasRef.current) => {
-    return { canvas, context: canvas?.getContext('2d') };
+    return { canvas, context: canvas?.getContext("2d") };
   };
+
+  const isDrawing = !!currentStroke.points.length;
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const { context } = getCanvasWithContext();
+
+    if (!context) {
+      return;
+    }
+
+    requestAnimationFrame(() =>
+      drawStroke(context, currentStroke.points, currentStroke.color)
+    );
+  }, [currentStroke]);
 
   useEffect(() => {
     const { canvas, context } = getCanvasWithContext();
@@ -20,17 +40,36 @@ function App() {
 
     setCanvasSize(canvas, WIDTH, HEIGHT);
 
-    context.lineJoin = 'round';
-    context.lineCap = 'round';
+    context.lineJoin = "round";
+    context.lineCap = "round";
     context.lineWidth = 5;
-    context.strokeStyle = 'black';
+    context.strokeStyle = "black";
 
     clearCanvas(canvas);
   }, []);
 
-  const startDrawing = () => {};
-  const endDrawing = () => {};
-  const draw = () => {};
+  const startDrawing = ({
+    nativeEvent,
+  }: React.MouseEvent<HTMLCanvasElement>) => {
+    const { offsetX, offsetY } = nativeEvent;
+    dispatch(beginStroke(offsetX, offsetY));
+  };
+
+  const endDrawing = () => {
+    if (isDrawing) {
+      dispatch(endStroke());
+    }
+  };
+
+  const draw = ({ nativeEvent }: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!isDrawing) {
+      return;
+    }
+
+    const { offsetX, offsetY } = nativeEvent;
+
+    dispatch(updateStroke(offsetX, offsetY));
+  };
 
   return (
     <div className="window">
