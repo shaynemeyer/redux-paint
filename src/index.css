@@ -1,4 +1,4 @@
-@import "~xp.css/dist/XP.css";
+@import '~xp.css/dist/XP.css';
 
 canvas {
   transform: translate3d(-50%, 0, 0);
@@ -33,5 +33,12 @@ canvas {
   position: fixed;
   bottom: 40px;
   left: 30px;
+  z-index: 10;
+}
+
+.file {
+  position: fixed;
+  bottom: 40px;
+  right: 20%;
   z-index: 10;
 }

@@ -31,6 +31,7 @@ It correctly bundles React in production mode and optimizes the build for the be
 - redux-logger
 - redux-devtools-extension
 - https://botoxparty.github.io/XP.css/
+- https://www.npmjs.com/package/file-saver
 
 ## Resources
 
