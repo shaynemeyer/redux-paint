@@ -38,3 +38,9 @@ It correctly bundles React in production mode and optimizes the build for the be
 - [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API)
 - [Redux Toolkit](https://redux-toolkit.js.org/)
 - [Thunks](https://github.com/reduxjs/redux-thunk)
+
+## Todos
+
+- prep and deploy to Heroku
+- add support for multiple user accounts
+- add refresh button

@@ -1,3 +1,4 @@
+import { response } from 'express';
 import { Stroke } from '../../utils/types';
 
 export const newProject = (name: string, strokes: Stroke[], image: string) => {
@@ -9,4 +10,10 @@ export const newProject = (name: string, strokes: Stroke[], image: string) => {
     },
     body: JSON.stringify({ name, strokes, image }),
   }).then((res) => res.json());
+};
+
+export const getProject = (projectId: string) => {
+  return fetch(`http://localhost:4000/projects/${projectId}`).then((response) =>
+    response.json()
+  );
 };

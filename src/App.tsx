@@ -11,23 +11,36 @@ import { EditPanel } from './shared/EditPanel';
 import { useCanvas } from './CanvasContext';
 import { FilePanel } from './shared/FilePanel';
 import { ModalLayer } from './components/modal/ModalLayer';
+import { RootState } from './utils/types';
 
 const WIDTH = 1024;
 const HEIGHT = 768;
 
 function App() {
+  const dispatch = useDispatch();
   const canvasRef = useCanvas();
-  const currentStroke = useSelector(currentStrokeSelector);
-  const historyIndex = useSelector(historyIndexSelector);
-  const strokes = useSelector(strokesSelector);
+  const isDrawing = useSelector<RootState>(
+    (state) => !!state.currentStroke.points.length
+  );
+
+  const historyIndex = useSelector<RootState, RootState['historyIndex']>(
+    historyIndexSelector
+  );
+  const strokes = useSelector<RootState, RootState['strokes']>(strokesSelector);
+  const currentStroke = useSelector<RootState, RootState['currentStroke']>(
+    currentStrokeSelector
+  );
 
   const getCanvasWithContext = (canvas = canvasRef.current) => {
     return { canvas, context: canvas?.getContext('2d') };
   };
 
-  const isDrawing = !!currentStroke.points.length;
-
-  const dispatch = useDispatch();
+  const startDrawing = ({
+    nativeEvent,
+  }: React.MouseEvent<HTMLCanvasElement>) => {
+    const { offsetX, offsetY } = nativeEvent;
+    dispatch(beginStroke({ x: offsetX, y: offsetY }));
+  };
 
   useEffect(() => {
     const { canvas, context } = getCanvasWithContext();
@@ -43,6 +56,7 @@ function App() {
         drawStroke(context, stroke.points, stroke.color);
       });
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [historyIndex, strokes]);
 
   useEffect(() => {
@@ -55,6 +69,7 @@ function App() {
     requestAnimationFrame(() =>
       drawStroke(context, currentStroke.points, currentStroke.color)
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentStroke]);
 
   useEffect(() => {
@@ -72,14 +87,8 @@ function App() {
     context.strokeStyle = 'black';
 
     clearCanvas(canvas);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const startDrawing = ({
-    nativeEvent,
-  }: React.MouseEvent<HTMLCanvasElement>) => {
-    const { offsetX, offsetY } = nativeEvent;
-    dispatch(beginStroke({ x: offsetX, y: offsetY }));
-  };
 
   const endDrawing = () => {
     if (isDrawing) {
