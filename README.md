@@ -1,6 +1,6 @@
 # Redux Paint
 
-This project is a minimal Paint clone written with Redux
+This project is a minimal Paint clone written with React, TypeScript & Redux
 
 ## Available Scripts
 
@@ -27,7 +27,7 @@ It correctly bundles React in production mode and optimizes the build for the be
 ## Dependencies
 
 - redux
-- react-redux
+- @reduxjs/toolkit
 - redux-logger
 - redux-devtools-extension
 - https://botoxparty.github.io/XP.css/
@@ -36,3 +36,5 @@ It correctly bundles React in production mode and optimizes the build for the be
 ## Resources
 
 - [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API)
+- [Redux Toolkit](https://redux-toolkit.js.org/)
+- [Thunks](https://github.com/reduxjs/redux-thunk)
